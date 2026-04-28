@@ -7,6 +7,10 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <Folder Include="Components\DB\" />
+      <Folder Include="Components\Models\" />
+      <Folder Include="Components\Services\Implementation\" />
+      <Folder Include="Components\Services\Interface\" />
       <Folder Include="Dokumentation\" />
     </ItemGroup>
 
