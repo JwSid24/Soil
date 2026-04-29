@@ -1,4 +1,7 @@
 ﻿@page "/"
+@using Soil.Models
+@using Soil.Services.Interface
+@inject ISoilService SoilService
 
 <PageTitle> Soil Mointor</PageTitle>
 
@@ -7,6 +10,18 @@
     
     <div class="Box-tl">
         <h2> Målling </h2>
+        @if (senesteMaaling != null)
+        {
+            <div class="maalingIndhold">
+                <span class="fugtighedTal">@senesteMaaling.MoistureLevel.ToString("0.0")%</span>
+                <p class="tid-tekst">Målt den: @senesteMaaling.Timestamp.ToLocalTime().ToString("dd/MM HH:mm")</p>
+            </div>
+        }
+        else
+        {
+            <p> Ingen data funde...</p>
+        }
+        
     </div>
     
     
@@ -28,3 +43,16 @@
     
 
 </div>
+
+@code {
+
+    private SoilMoistureReading? senesteMaaling;
+
+    protected override async Task OnInitializedAsync()
+    {
+        
+            senesteMaaling = await SoilService.GetLatestReadingAsync();
+        
+    }
+
+}

@@ -1,14 +1,20 @@
 using Soil.Components;
 using Soil.Services.Interface;
+using Soil.DB;
 using Soil.Services.Implementation;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+
 
 // Add services to the container.
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
-
+builder.Services.AddScoped<ISoilService, SoilService>();
 builder.Services.AddHttpClient<IJordDataKlient, JordDataKlient>();
 
 var app = builder.Build();

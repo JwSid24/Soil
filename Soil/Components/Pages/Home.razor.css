@@ -1,0 +1,73 @@
+/* Selve beholderen */
+.container-main {
+    display: grid;
+    /* Laver 2 kolonner der deler pladsen ligeligt (1 fraction hver) */
+    grid-template-columns: 1fr 1fr;
+    gap: 20px; /* Afstand mellem boksene */
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Sørger for at overskriften fylder hele bredden øverst */
+.container-main h1 {
+    grid-column: span 2;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Fælles styling for alle dine bokse (så de ligner "kort") */
+.Box-tl, .Box-tr, .Box-bl, .Box-br {
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    padding: 25px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    min-height: 200px; /* Sikrer de har en god størrelse */
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+/* Styling af overskrifter i boksene */
+h2 {
+    font-size: 1.25rem;
+    color: #2c3e50;
+    margin-top: 0;
+    border-bottom: 2px solid #f0f0f0;
+    padding-bottom: 10px;
+}
+
+/* Specifik styling til alarm-knappen i nederste højre boks */
+button {
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background 0.2s;
+}
+
+button:hover {
+    background-color: #c0392b;
+}
+
+.Box-tl {
+    text-align: center;
+}
+
+.fugtighed-tal {
+    font-size: 3rem;
+    font-weight: 800;
+    color: #28a745; /* En flot grøn farve til fugtighed */
+    display: block;
+    margin: 10px 0;
+}
+
+.tid-tekst {
+    font-size: 0.9rem;
+    color: #6c757d;
+    font-style: italic;
+}
