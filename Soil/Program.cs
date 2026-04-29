@@ -14,8 +14,9 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
-builder.Services.AddScoped<ISoilService, SoilService>();
 builder.Services.AddHttpClient<IJordDataKlient, JordDataKlient>();
+builder.Services.AddScoped<ISoilService, SoilService>();
+
 
 var app = builder.Build();
 

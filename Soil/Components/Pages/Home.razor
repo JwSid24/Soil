@@ -9,11 +9,15 @@
     <h1>Soil Status</h1>
     
     <div class="Box-tl">
-        <h2> Målling </h2>
-        @if (senesteMaaling != null)
+        <h2> Måling </h2>
+        @if (indlæser)
+        {
+            <p>Henter data...</p>
+        }
+        else if(senesteMaaling != null)
         {
             <div class="maalingIndhold">
-                <span class="fugtighedTal">@senesteMaaling.MoistureLevel.ToString("0.0")%</span>
+                <span class="fugtighedTal">@senesteMaaling.MoistureLevel.ToString("0.000") m³/m³</span>
                 <p class="tid-tekst">Målt den: @senesteMaaling.Timestamp.ToLocalTime().ToString("dd/MM HH:mm")</p>
             </div>
         }
@@ -47,12 +51,14 @@
 @code {
 
     private SoilMoistureReading? senesteMaaling;
+    private bool indlæser = true;
 
     protected override async Task OnInitializedAsync()
     {
-        
+            await SoilService.GemMålingAsync(0, 0);
             senesteMaaling = await SoilService.GetLatestReadingAsync();
-        
+            indlæser = false;
+
     }
 
 }
