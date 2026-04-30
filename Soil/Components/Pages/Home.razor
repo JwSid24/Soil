@@ -18,6 +18,8 @@
         {
             <div class="maalingIndhold">
                 <span class="fugtighedTal">@senesteMaaling.MoistureLevel.ToString("0.000") m³/m³</span>
+                <span class="fugtighed-tal">@senesteMaaling.Depth.ToString("0.0") cm</span>
+                
                 <p class="tid-tekst">Målt den: @senesteMaaling.Timestamp.ToLocalTime().ToString("dd/MM HH:mm")</p>
             </div>
         }

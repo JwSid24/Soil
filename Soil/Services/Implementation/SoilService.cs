@@ -16,7 +16,6 @@ public class SoilService : ISoilService
         _jordDataKlient = jordDataKlient;
     }
     
-    // Implementere de her metoder, tilføj api logik 
     public async Task<SoilMoistureReading> GetLatestReadingAsync()
     {
         return await _context.SoilReadings.OrderByDescending(r => r.Timestamp).FirstOrDefaultAsync();
