@@ -16,10 +16,6 @@ public class SoilService : ISoilService
         _jordDataKlient = jordDataKlient;
     }
     
-    public async Task<SoilMoistureReading> GetLatestReadingAsync()
-    {
-        return await _context.SoilReadings.OrderByDescending(r => r.Timestamp).FirstOrDefaultAsync();
-    }
 
     public async Task<List<SoilMoistureReading>> GetHistoryAsync()
     {
