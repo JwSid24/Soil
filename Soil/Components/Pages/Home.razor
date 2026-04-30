@@ -14,20 +14,28 @@
         {
             <p>Henter data...</p>
         }
-        else if(senesteMaaling != null)
-        {
-            <div class="maalingIndhold">
-                <span class="fugtighedTal">@senesteMaaling.MoistureLevel.ToString("0.000") m³/m³</span>
-                <span class="fugtighed-tal">@senesteMaaling.Depth.ToString("0.0") cm</span>
-                
-                <p class="tid-tekst">Målt den: @senesteMaaling.Timestamp.ToLocalTime().ToString("dd/MM HH:mm")</p>
-            </div>
-        }
         else
         {
-            <p> Ingen data funde...</p>
+            <div class="maaling-grid">
+                @if (overfladeMaaling != null)
+                {
+                    <div class="maalingIndhold">
+                        <span class="fugtighed-tal">@overfladeMaaling.Depth.ToString("0.0") cm</span>
+                        <span class="fugtighedTal">@overfladeMaaling.MoistureLevel.ToString("0.000") m³/m³</span>
+                        <p class="tid-tekst">Målt den: @overfladeMaaling.Timestamp.ToLocalTime().ToString("dd/MM HH:mm")</p>
+                    </div>
+                }
+
+                @if (undergrundMaaling != null)
+                {
+                    <div class="maalingIndhold">
+                        <span class="fugtighed-tal">@undergrundMaaling.Depth.ToString("0.0") cm</span>
+                        <span class="fugtighedTal">@undergrundMaaling.MoistureLevel.ToString("0.000") m³/m³</span>
+                        <p class="tid-tekst">Målt den: @undergrundMaaling.Timestamp.ToLocalTime().ToString("dd/MM HH:mm")</p>
+                    </div>
+                }
+            </div>
         }
-        
     </div>
     
     
@@ -52,13 +60,15 @@
 
 @code {
 
-    private SoilMoistureReading? senesteMaaling;
+    private SoilMoistureReading? overfladeMaaling ;
+    private SoilMoistureReading? undergrundMaaling ;
     private bool indlæser = true;
 
     protected override async Task OnInitializedAsync()
     {
             await SoilService.GemMålingAsync(0, 0);
-            senesteMaaling = await SoilService.GetLatestReadingAsync();
+            overfladeMaaling = await SoilService.GetLatestByDepthAsync(1);
+            undergrundMaaling = await SoilService.GetLatestByDepthAsync(54);
             indlæser = false;
 
     }
