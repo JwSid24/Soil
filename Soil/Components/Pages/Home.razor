@@ -9,7 +9,7 @@
     <h1>Soil Status</h1>
     
     <div class="Box-tl">
-        <h2> Måling </h2>
+        <h2> Seneste Måling </h2>
         @if (indlæser)
         {
             <p>Henter data...</p>
@@ -41,6 +41,36 @@
     
     <div class="Box-tr">
         <h2> Data historik </h2>
+        @if (historik.Count == 0)
+        {
+            <p>ingen historik endnu</p>
+        }
+        else
+        {
+            <table>
+                <thead>
+                <tr>
+                    <th>Tidspunkt</th>
+                    <th>Fugtighed</th>
+                    <th>Dybde</th>
+                </tr>
+                </thead>
+                <tbody>
+                @foreach (var maaling in historik)
+
+                {
+                    <tr>
+                        <td>@maaling.Timestamp.ToLocalTime().ToString("dd/MM HH:mm")</td>
+                        <td>@maaling.MoistureLevel.ToString("0.000") m³/m³</td>
+                        <td>@maaling.Depth.ToString("0") cm</td>
+                    </tr>
+
+                }
+
+                </tbody>
+
+            </table>
+        }
        
     </div>
     
@@ -62,6 +92,7 @@
 
     private SoilMoistureReading? overfladeMaaling ;
     private SoilMoistureReading? undergrundMaaling ;
+    private List<SoilMoistureReading> historik = new();
     private bool indlæser = true;
 
     protected override async Task OnInitializedAsync()
@@ -69,6 +100,8 @@
             await SoilService.GemMålingAsync(0, 0);
             overfladeMaaling = await SoilService.GetLatestByDepthAsync(1);
             undergrundMaaling = await SoilService.GetLatestByDepthAsync(54);
+            historik = await SoilService.GetHistoryAsync();
+            
             indlæser = false;
 
     }

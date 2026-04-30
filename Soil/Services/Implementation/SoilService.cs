@@ -23,7 +23,7 @@ public class SoilService : ISoilService
 
     public async Task<List<SoilMoistureReading>> GetHistoryAsync()
     {
-        return await _context.SoilReadings.OrderByDescending(r => r.Timestamp).Take(24).ToListAsync();
+        return await _context.SoilReadings.OrderByDescending(r => r.Timestamp).Take(40).ToListAsync();
     }
     
     public async Task GemMålingAsync(double overflade, double undergrund)
