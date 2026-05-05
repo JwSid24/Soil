@@ -3,6 +3,7 @@ using Soil.Services.Interface;
 using Soil.DB;
 using Soil.Services.Implementation;
 using Microsoft.EntityFrameworkCore;
+using Plotly.Blazor;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +15,7 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
+builder.Services.AddScoped<PlotlyChart>();
 builder.Services.AddHttpClient<IJordDataKlient, JordDataKlient>();
 builder.Services.AddScoped<ISoilService, SoilService>();
 
@@ -30,9 +32,8 @@ if (!app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-
+app.UseStaticFiles();
 app.UseAntiforgery();
-
 
 
 app.MapStaticAssets();

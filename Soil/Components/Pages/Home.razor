@@ -76,6 +76,13 @@
     
     <div class="Box-bl">
         <h2> Graf over data point </h2>
+        @if (!indlæser)
+        {
+            <PlotlyChart @bind-Config="config"
+                         @bind-Layout="layout"
+                         @bind-Data="grafData"></PlotlyChart>
+            
+        }
     </div>
     
     
@@ -93,6 +100,48 @@
     private SoilMoistureReading? overfladeMaaling ;
     private SoilMoistureReading? undergrundMaaling ;
     private List<SoilMoistureReading> historik = new();
+    private Plotly.Blazor.Config config = new();
+    private IList<ITrace> grafData = new List<ITrace>();
+    
+    private Plotly.Blazor.Layout layout = new()
+    {
+        Height = 250,
+        Margin = new() { L = 40, R = 10, T = 10, B = 40 }
+    };
+
+    private void BuildGraf()
+    {
+        var overfladePunkter = historik
+            .Where(r => r.Depth == 1).OrderBy(r => r.Timestamp).ToList();
+        
+        var undergrudPunkter = historik
+            .Where(r => r.Depth == 54).OrderBy(r => r.Timestamp).ToList();
+
+        grafData = new List<ITrace>
+        {
+            new Scatter
+            {
+                Name = "Overflade (1cm)",
+                X = overfladePunkter.Select(r => (object)r.Timestamp.ToLocalTime().ToString("dd/MM HH:mm")).ToList(),
+                Y = overfladePunkter.Select(r => (object)r.MoistureLevel).ToList(),
+                Mode = Plotly.Blazor.Traces.ScatterLib.ModeFlag.Lines
+
+            },
+            new Scatter
+            {
+                Name = "Undergrund (54cm)",
+                X = undergrudPunkter.Select(r => (object)r.Timestamp.ToLocalTime().ToString("dd/MM HH:mm")).ToList(),
+                Y = undergrudPunkter.Select(r => (object)r.MoistureLevel).ToList(),
+                Mode = Plotly.Blazor.Traces.ScatterLib.ModeFlag.Lines
+            }
+
+        };
+
+    }
+    
+    
+    
+    
     private bool indlæser = true;
 
     protected override async Task OnInitializedAsync()
@@ -101,7 +150,7 @@
             overfladeMaaling = await SoilService.GetLatestByDepthAsync(1);
             undergrundMaaling = await SoilService.GetLatestByDepthAsync(54);
             historik = await SoilService.GetHistoryAsync();
-            
+            BuildGraf();
             indlæser = false;
 
     }
