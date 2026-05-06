@@ -3,6 +3,7 @@
 @using Soil.Services.Interface
 @inject ISoilService SoilService
 @rendermode InteractiveServer
+@implements IDisposable 
 
 
 <PageTitle> Soil Mointor</PageTitle>
@@ -11,7 +12,7 @@
     <h1>Soil Status</h1>
     
     <div class="Box-tl">
-        <h2> Seneste Måling </h2>
+        <h2> Seneste Måling - Satemin </h2>
         @if (indlæser)
         {
             <p>Henter data...</p>
@@ -104,6 +105,7 @@
     private List<SoilMoistureReading> historik = new();
     private Plotly.Blazor.Config config = new();
     private IList<ITrace> grafData = new List<ITrace>();
+    private PeriodicTimer? timer; 
     
     private Plotly.Blazor.Layout layout = new()
     {
@@ -140,21 +142,37 @@
         };
 
     }
-    
-    
-    
-    
+
+    private async Task IndlæsData()
+    {
+        await SoilService.GemMålingAsync(0, 0);
+        overfladeMaaling = await SoilService.GetLatestByDepthAsync(1);
+        undergrundMaaling = await SoilService.GetLatestByDepthAsync(54);
+        historik = await SoilService.GetHistoryAsync();
+        indlæser = false; 
+    }
+
+
     private bool indlæser = true;
 
     protected override async Task OnInitializedAsync()
     {
-            await SoilService.GemMålingAsync(0, 0);
-            overfladeMaaling = await SoilService.GetLatestByDepthAsync(1);
-            undergrundMaaling = await SoilService.GetLatestByDepthAsync(54);
-            historik = await SoilService.GetHistoryAsync();
-            BuildGraf();
-            indlæser = false;
+            await IndlæsData();
+            timer = new PeriodicTimer(TimeSpan.FromMinutes(60));
+            _ = Task.Run(async () =>
+            {
+                while (await timer.WaitForNextTickAsync())
+                {
+                    await IndlæsData();
+                    await InvokeAsync(StateHasChanged);
+                }
+            });
 
+    }
+
+    public void Dispose()
+    {
+        timer.Dispose();
     }
 
 }
