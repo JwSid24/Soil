@@ -90,8 +90,30 @@
     
     
     <div class="Box-br">
-        <h2> For tørt - Alarm  </h2>
-        <button> Send operatør til vande </button>
+
+        <h2>For tørt - Alarm</h2>
+
+        @if (alarmAktiv)
+
+        {
+
+            <div class="alarm-boks">
+
+                <p>⚠️ Fugtighed under grænseværdi!</p>
+
+            </div>
+
+        }
+
+        @if (beskederSendt)  
+
+        {
+
+            <p style="color: green; font-weight: bold; text-align: center;">✅ Besked sendt til operatør!</p>
+
+        }
+
+        <button @onclick="SendNotifikation">Send operatør til vande</button>
 
     </div>
     
@@ -105,12 +127,23 @@
     private List<SoilMoistureReading> historik = new();
     private Plotly.Blazor.Config config = new();
     private IList<ITrace> grafData = new List<ITrace>();
-    private PeriodicTimer? timer; 
+    private PeriodicTimer? timer;
+    private const double Grænseværdi = 0.100;
+    private bool alarmAktiv=false; 
+    private bool beskederSendt = false; 
     
     private Plotly.Blazor.Layout layout = new()
     {
-        Height = 250,
-        Margin = new() { L = 40, R = 10, T = 10, B = 40 }
+        Height = 300,
+        AutoSize = true,
+        Margin = new() { L = 50, R = 20, T = 20, B = 80 }, 
+        XAxis = new List<XAxis>
+        {
+            new XAxis
+            {
+                TickAngle = -45  
+            }
+        }
     };
 
     private void BuildGraf()
@@ -142,6 +175,7 @@
         };
 
     }
+    
 
     private async Task IndlæsData()
     {
@@ -149,7 +183,25 @@
         overfladeMaaling = await SoilService.GetLatestByDepthAsync(1);
         undergrundMaaling = await SoilService.GetLatestByDepthAsync(54);
         historik = await SoilService.GetHistoryAsync();
-        indlæser = false; 
+        BuildGraf();
+
+        if (overfladeMaaling != null && overfladeMaaling.MoistureLevel < Grænseværdi)
+        {
+            Console.WriteLine($"ALARM: Overflade fugtighed er under grænseværdi! Værdi: {overfladeMaaling.MoistureLevel}");
+            alarmAktiv = true;
+        }
+        else
+        {
+            alarmAktiv = false;
+        }
+
+        indlæser = false;
+
+    }
+    private void SendNotifikation() 
+    {
+        Console.WriteLine("NOTIFIKATION: Operatør er blevet kontaktet for at vande.");
+        beskederSendt = true;
     }
 
 
@@ -174,5 +226,7 @@
     {
         timer.Dispose();
     }
+    
+    
 
 }
