@@ -20,7 +20,21 @@ Derudover vil jeg udarbejde følgende i designfasen:
 •	UML-diagram, visualisering af systemets arkitektur og klasse struktur.
 •	Design mønstre, løbende overvejelse om hvilket/hvilke design mønster man skal bruge.
 
-
-
 https://open-meteo.com/en/docs/dwd-api?hourly=soil_moisture_0_to_1cm,soil_moisture_9_to_27cm,soil_moisture_27_to_81cm&latitude=52.9566&longitude=11.0949&forecast_days=1&past_days=7
 
+--- Sådan køres projektet --- 
+
+Få de nødvendige pakker til køre projektet: "dotnet restore"
+Med det command får du:
+- Microsoft.EntityFrameworkCore 9.0
+- Microsoft.EntityFrameworkCore.Design 9.0
+- Npgsql.EntityFrameworkCore.PostgreSQL 9.0
+- Plotly.Blazor 7.1.0
+
+1. Klon projektet: "git clone https://github.com/JwSid24/Soil"
+2. Installér pakker: "dotnet restore"
+3. Start databasen: "docker compose up -d"
+4. Installér EF Core værktøj: "dotnet tool install --global dotnet-ef"
+5. Kør migration: "dotnet ef database update"
+6. Start appen: "dotnet run"
+7. Åben i browser på localhost.
