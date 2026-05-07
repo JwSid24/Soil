@@ -1,4 +1,4 @@
-Udført af Jwan Sidou
+﻿Udført af Jwan Sidou
 
 Dette projekt er en webapplikation udviklet i ASP.NET C#. Valget af teknologien og sproget er baseret på et ønske om,
 som studerende at gå i dybden med C#-sproget og styrke mine kompetencer inden for backend udvikling.
