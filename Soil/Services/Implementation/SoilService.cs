@@ -22,7 +22,7 @@ public class SoilService : ISoilService
         return await _context.SoilReadings.OrderByDescending(r => r.Timestamp).Take(40).ToListAsync();
     }
     
-    public async Task GemMålingAsync(double overflade, double undergrund)
+    public async Task GemMålingAsync()
     {
         var (apiOverflade, apiUndergrund) = await _jordDataKlient.HentSenesteMålingerAsync();
         if (apiOverflade == 0 && apiUndergrund == 0) return;
