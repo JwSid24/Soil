@@ -11,14 +11,15 @@
     grid-column: span 2;
     text-align: center;
     margin-bottom: 20px;
+    color: #e0e8f0;
 }
 
 .Box-tl, .Box-tr, .Box-bl, .Box-br {
-    background-color: #ffffff;
-    border: 1px solid #e0e0e0;
+    background-color: #132338;
+    border: 1px solid #1e3a5f;
     border-radius: 12px;
     padding: 25px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
     min-height: 200px;
     display: flex;
     flex-direction: column;
@@ -27,9 +28,9 @@
 
 h2 {
     font-size: 1.25rem;
-    color: #2c3e50;
+    color: #a0b4c8;
     margin-top: 0;
-    border-bottom: 2px solid #f0f0f0;
+    border-bottom: 2px solid #1e3a5f;
     padding-bottom: 10px;
 }
 
@@ -61,14 +62,10 @@ button:hover {
 }
 
 .maalingIndhold {
-    border: 1px solid #f0f0f0;
+    border: 1px solid #1e3a5f;
     border-radius: 8px;
     padding: 12px;
-}
-
-.maalingIndhold p strong {
-    font-size: 0.95rem;
-    color: #2c3e50;
+    background-color: #0d2137;
 }
 
 .fugtighedTal {
@@ -76,11 +73,17 @@ button:hover {
     font-weight: 600;
     display: block;
     margin: 6px 0;
+    color: #4fc3f7;
+}
+
+.fugtighed-tal {
+    font-size: 0.95rem;
+    color: #a0b4c8;
 }
 
 .tid-tekst {
     font-size: 0.9rem;
-    color: #6c757d;
+    color: #5a7a94;
     font-style: italic;
 }
 
@@ -98,32 +101,33 @@ button:hover {
 
 .Box-tr th {
     text-align: left;
-    border-bottom: 2px solid #f0f0f0;
+    border-bottom: 2px solid #1e3a5f;
     padding: 6px 8px;
-    color: #2c3e50;
+    color: #a0b4c8;
     position: sticky;
     top: 0;
-    background-color: #ffffff;
+    background-color: #132338;
 }
 
 .Box-tr td {
     padding: 6px 8px;
-    border-bottom: 1px solid #f5f5f5;
-    color: #444;
+    border-bottom: 1px solid #1a2f45;
+    color: #c8d8e8;
 }
 
+/* Box-bl */
 .Box-bl {
-    min-height: 350px;  
+    min-height: 350px;
 }
 
 .Box-bl .js-plotly-plot,
 .Box-bl .plotly {
-    width: 100% !important; 
+    width: 100% !important;
 }
 
-
+/* Box-br */
 .alarm-boks {
-    background-color: #fff3f3;
+    background-color: #2d1515;
     border: 2px solid #e74c3c;
     border-radius: 8px;
     padding: 20px;

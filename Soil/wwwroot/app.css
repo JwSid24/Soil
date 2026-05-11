@@ -58,3 +58,7 @@ h1:focus {
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
     text-align: start;
 }
+body {
+    background-color: #0d1b2a;
+    color: #e0e8f0;
+}

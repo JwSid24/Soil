@@ -19,11 +19,18 @@ public class SoilService : ISoilService
 
     public async Task<List<SoilMoistureReading>> GetHistoryAsync()
     {
-        return await _context.SoilReadings.OrderByDescending(r => r.Timestamp).Take(40).ToListAsync();
+        return await _context.SoilReadings.OrderByDescending(r => r.Timestamp).Take(100).ToListAsync();
     }
     
     public async Task GemMålingAsync()
     {
+        var seneste = await _context.SoilReadings
+            .OrderByDescending(r => r.Timestamp)
+            .FirstOrDefaultAsync();
+
+        if (seneste != null && (DateTime.UtcNow - seneste.Timestamp).TotalMinutes < 60)
+            return;
+
         var (apiOverflade, apiUndergrund) = await _jordDataKlient.HentSenesteMålingerAsync();
         if (apiOverflade == 0 && apiUndergrund == 0) return;
         _context.SoilReadings.AddRange(

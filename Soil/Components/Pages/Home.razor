@@ -113,7 +113,7 @@
 
         }
 
-        <button @onclick="SendNotifikation">Send operatør til vande</button>
+        <button @onclick="SendNotifikation">Send operatør til at vande</button>
 
     </div>
     
@@ -137,11 +137,22 @@
         Height = 300,
         AutoSize = true,
         Margin = new() { L = 50, R = 20, T = 20, B = 80 }, 
+        Font = new Plotly.Blazor.LayoutLib.Font { Color = "#a0b4c8" }, 
         XAxis = new List<XAxis>
         {
             new XAxis
             {
-                TickAngle = -45  
+                TickAngle = -45,
+                GridColor = "#1e3a5f", 
+                LineColor = "#1e3a5f"   
+            }
+        },
+        YAxis = new List<YAxis> 
+        {
+            new YAxis
+            {
+                GridColor = "#1e3a5f",
+                LineColor = "#1e3a5f"
             }
         }
     };
@@ -161,7 +172,11 @@
                 Name = "Overflade (1cm)",
                 X = overfladePunkter.Select(r => (object)r.Timestamp.ToLocalTime().ToString("dd/MM HH:mm")).ToList(),
                 Y = overfladePunkter.Select(r => (object)r.MoistureLevel).ToList(),
-                Mode = Plotly.Blazor.Traces.ScatterLib.ModeFlag.Lines
+                Mode = Plotly.Blazor.Traces.ScatterLib.ModeFlag.Lines,
+                Line = new Plotly.Blazor.Traces.ScatterLib.Line 
+                {
+                    Color = "#4fc3f7"  
+                }
 
             },
             new Scatter
@@ -169,7 +184,11 @@
                 Name = "Undergrund (54cm)",
                 X = undergrudPunkter.Select(r => (object)r.Timestamp.ToLocalTime().ToString("dd/MM HH:mm")).ToList(),
                 Y = undergrudPunkter.Select(r => (object)r.MoistureLevel).ToList(),
-                Mode = Plotly.Blazor.Traces.ScatterLib.ModeFlag.Lines
+                Mode = Plotly.Blazor.Traces.ScatterLib.ModeFlag.Lines,
+                Line = new Plotly.Blazor.Traces.ScatterLib.Line 
+                {
+                    Color = "#ff7043" 
+                }
             }
 
         };
