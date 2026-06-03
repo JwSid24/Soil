@@ -6,35 +6,35 @@
 @implements IDisposable 
 
 
-<PageTitle> Soil Mointor</PageTitle>
+<PageTitle> Soil Monitor</PageTitle>
 
 <div class="container-main">
     <h1>Soil Status</h1>
     
     <div class="Box-tl">
-        <h2> Seneste Måling - Satemin </h2>
-        @if (indlæser)
+        <h2> Latest Reading - Satemin </h2>
+        @if (loading)
         {
-            <p>Henter data...</p>
+            <p>Loading data...</p>
         }
         else
         {
-            <div class="maaling-grid">
-                @if (overfladeMaaling != null)
+            <div class="reading-grid">
+                @if (surfaceReading != null)
                 {
-                    <div class="maalingIndhold">
-                        <span class="fugtighed-tal">@overfladeMaaling.Depth.ToString("0.0") cm</span>
-                        <span class="fugtighedTal">@overfladeMaaling.MoistureLevel.ToString("0.000") m³/m³</span>
-                        <p class="tid-tekst">Målt den: @overfladeMaaling.Timestamp.ToLocalTime().ToString("dd/MM HH:mm")</p>
+                    <div class="readingContent">
+                        <span class="moisture-text">@surfaceReading.Depth.ToString("0.0") cm</span>
+                        <span class="moistureValue">@surfaceReading.MoistureLevel.ToString("0.000") m³/m³</span>
+                        <p class="time-text">Measured at: @surfaceReading.Timestamp.ToLocalTime().ToString("dd/MM HH:mm")</p>
                     </div>
                 }
 
-                @if (undergrundMaaling != null)
+                @if (undergroundReading != null)
                 {
-                    <div class="maalingIndhold">
-                        <span class="fugtighed-tal">@undergrundMaaling.Depth.ToString("0.0") cm</span>
-                        <span class="fugtighedTal">@undergrundMaaling.MoistureLevel.ToString("0.000") m³/m³</span>
-                        <p class="tid-tekst">Målt den: @undergrundMaaling.Timestamp.ToLocalTime().ToString("dd/MM HH:mm")</p>
+                    <div class="readingContent">
+                        <span class="moisture-text">@undergroundReading.Depth.ToString("0.0") cm</span>
+                        <span class="moistureValue">@undergroundReading.MoistureLevel.ToString("0.000") m³/m³</span>
+                        <p class="time-text">Measured at: @undergroundReading.Timestamp.ToLocalTime().ToString("dd/MM HH:mm")</p>
                     </div>
                 }
             </div>
@@ -43,47 +43,43 @@
     
     
     <div class="Box-tr">
-        <h2> Data historik </h2>
-        @if (historik.Count == 0)
+        <h2> Data History </h2>
+        @if (history.Count == 0)
         {
-            <p>ingen historik endnu</p>
+            <p>No history yet</p>
         }
         else
         {
             <table>
                 <thead>
                 <tr>
-                    <th>Tidspunkt</th>
-                    <th>Fugtighed</th>
-                    <th>Dybde</th>
+                    <th>Timestamp</th>
+                    <th>Moisture</th>
+                    <th>Depth</th>
                 </tr>
                 </thead>
                 <tbody>
-                @foreach (var maaling in historik)
-
+                @foreach (var reading in history)
                 {
                     <tr>
-                        <td>@maaling.Timestamp.ToLocalTime().ToString("dd/MM HH:mm")</td>
-                        <td>@maaling.MoistureLevel.ToString("0.000") m³/m³</td>
-                        <td>@maaling.Depth.ToString("0") cm</td>
+                        <td>@reading.Timestamp.ToLocalTime().ToString("dd/MM HH:mm")</td>
+                        <td>@reading.MoistureLevel.ToString("0.000") m³/m³</td>
+                        <td>@reading.Depth.ToString("0") cm</td>
                     </tr>
-
                 }
-
                 </tbody>
-
             </table>
         }
        
     </div>
     
     <div class="Box-bl">
-        <h2> Graf over data point </h2>
-        @if (!indlæser)
+        <h2> Graph of data points </h2>
+        @if (!loading)
         {
             <PlotlyChart @bind-Config="config"
                          @bind-Layout="layout"
-                         @bind-Data="grafData"></PlotlyChart>
+                         @bind-Data="graphData"></PlotlyChart>
             
         }
     </div>
@@ -91,29 +87,21 @@
     
     <div class="Box-br">
 
-        <h2>For tørt - Alarm</h2>
+        <h2>Too Dry - Alarm</h2>
 
-        @if (alarmAktiv)
-
+        @if (alarmActive)
         {
-
-            <div class="alarm-boks">
-
-                <p>⚠️ Fugtighed under grænseværdi!</p>
-
+            <div class="alarm-box">
+                <p>⚠️ Moisture below threshold!</p>
             </div>
-
         }
 
-        @if (beskederSendt)  
-
+        @if (messageSent)  
         {
-
-            <p style="color: green; font-weight: bold; text-align: center;">✅ Besked sendt til operatør!</p>
-
+            <p style="color: green; font-weight: bold; text-align: center;">✅ Message sent to operator!</p>
         }
 
-        <button @onclick="SendNotifikation">Send operatør til at vande</button>
+        <button @onclick="SendNotification">Send operator to water</button>
 
     </div>
     
@@ -122,15 +110,15 @@
 
 @code {
 
-    private SoilMoistureReading? overfladeMaaling ;
-    private SoilMoistureReading? undergrundMaaling ;
-    private List<SoilMoistureReading> historik = new();
+    private SoilMoistureReading? surfaceReading;
+    private SoilMoistureReading? undergroundReading;
+    private List<SoilMoistureReading> history = new();
     private Plotly.Blazor.Config config = new();
-    private IList<ITrace> grafData = new List<ITrace>();
+    private IList<ITrace> graphData = new List<ITrace>();
     private PeriodicTimer? timer;
-    private const double Grænseværdi = 0.100;
-    private bool alarmAktiv=false; 
-    private bool beskederSendt = false; 
+    private const double Threshold = 0.100;
+    private bool alarmActive = false; 
+    private bool messageSent = false; 
     
     private Plotly.Blazor.Layout layout = new()
     {
@@ -157,95 +145,89 @@
         }
     };
 
-    private void BuildGraf()
+    private void BuildGraph()
     {
-        var overfladePunkter = historik
+        var surfacePoints = history
             .Where(r => r.Depth == 1).OrderBy(r => r.Timestamp).ToList();
         
-        var undergrudPunkter = historik
+        var undergroundPoints = history
             .Where(r => r.Depth == 54).OrderBy(r => r.Timestamp).ToList();
 
-        grafData = new List<ITrace>
+        graphData = new List<ITrace>
         {
             new Scatter
             {
-                Name = "Overflade (1cm)",
-                X = overfladePunkter.Select(r => (object)r.Timestamp.ToLocalTime().ToString("dd/MM HH:mm")).ToList(),
-                Y = overfladePunkter.Select(r => (object)r.MoistureLevel).ToList(),
+                Name = "Surface (1cm)",
+                X = surfacePoints.Select(r => (object)r.Timestamp.ToLocalTime().ToString("dd/MM HH:mm")).ToList(),
+                Y = surfacePoints.Select(r => (object)r.MoistureLevel).ToList(),
                 Mode = Plotly.Blazor.Traces.ScatterLib.ModeFlag.Lines,
                 Line = new Plotly.Blazor.Traces.ScatterLib.Line 
                 {
                     Color = "#4fc3f7"  
                 }
-
             },
             new Scatter
             {
-                Name = "Undergrund (54cm)",
-                X = undergrudPunkter.Select(r => (object)r.Timestamp.ToLocalTime().ToString("dd/MM HH:mm")).ToList(),
-                Y = undergrudPunkter.Select(r => (object)r.MoistureLevel).ToList(),
+                Name = "Underground (54cm)",
+                X = undergroundPoints.Select(r => (object)r.Timestamp.ToLocalTime().ToString("dd/MM HH:mm")).ToList(),
+                Y = undergroundPoints.Select(r => (object)r.MoistureLevel).ToList(),
                 Mode = Plotly.Blazor.Traces.ScatterLib.ModeFlag.Lines,
                 Line = new Plotly.Blazor.Traces.ScatterLib.Line 
                 {
                     Color = "#ff7043" 
                 }
             }
-
         };
-
     }
     
 
-    private async Task IndlæsData()
+    private async Task LoadData()
     {
         await SoilService.SaveReadingAsync();
-        overfladeMaaling = await SoilService.GetLatestByDepthAsync(1);
-        undergrundMaaling = await SoilService.GetLatestByDepthAsync(54);
-        historik = await SoilService.GetHistoryAsync();
-        BuildGraf();
+        surfaceReading = await SoilService.GetLatestByDepthAsync(1);
+        undergroundReading = await SoilService.GetLatestByDepthAsync(54);
+        history = await SoilService.GetHistoryAsync();
+        BuildGraph();
 
-        if (overfladeMaaling != null && overfladeMaaling.MoistureLevel < Grænseværdi)
+        if (surfaceReading != null && surfaceReading.MoistureLevel < Threshold)
         {
-            Console.WriteLine($"ALARM: Overflade fugtighed er under grænseværdi! Værdi: {overfladeMaaling.MoistureLevel}");
-            alarmAktiv = true;
+            Console.WriteLine($"ALARM: Surface moisture is below threshold! Value: {surfaceReading.MoistureLevel}");
+            alarmActive = true;
         }
         else
         {
-            alarmAktiv = false;
+            alarmActive = false;
         }
 
-        indlæser = false;
-
+        loading = false;
     }
-    private void SendNotifikation() 
+
+    private void SendNotification() 
     {
-        Console.WriteLine("NOTIFIKATION: Operatør er blevet kontaktet for at vande.");
-        beskederSendt = true;
+        Console.WriteLine("NOTIFICATION: Operator has been contacted to water.");
+        messageSent = true;
     }
 
 
-    private bool indlæser = true;
+    private bool loading = true;
 
     protected override async Task OnInitializedAsync()
     {
-            await IndlæsData();
+            await LoadData();
             timer = new PeriodicTimer(TimeSpan.FromMinutes(60));
             _ = Task.Run(async () =>
             {
                 while (await timer.WaitForNextTickAsync())
                 {
-                    await IndlæsData();
+                    await LoadData();
                     await InvokeAsync(StateHasChanged);
                 }
             });
-
     }
 
     public void Dispose()
     {
         timer.Dispose();
     }
-    
-    
 
 }
