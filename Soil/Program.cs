@@ -16,7 +16,7 @@ builder.Services.AddRazorComponents()
     .AddInteractiveServerComponents();
 
 builder.Services.AddScoped<PlotlyChart>();
-builder.Services.AddHttpClient<IJordDataKlient, JordDataKlient>();
+builder.Services.AddHttpClient<ISoilDataClient, SoilDataClient>();
 builder.Services.AddScoped<ISoilService, SoilService>();
 
 

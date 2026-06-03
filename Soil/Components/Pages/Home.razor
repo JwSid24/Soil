@@ -198,7 +198,7 @@
 
     private async Task IndlæsData()
     {
-        await SoilService.GemMålingAsync();
+        await SoilService.SaveReadingAsync();
         overfladeMaaling = await SoilService.GetLatestByDepthAsync(1);
         undergrundMaaling = await SoilService.GetLatestByDepthAsync(54);
         historik = await SoilService.GetHistoryAsync();

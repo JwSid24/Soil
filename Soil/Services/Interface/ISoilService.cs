@@ -3,10 +3,7 @@ namespace Soil.Services.Interface;
 
 public interface ISoilService
 {
-    
     Task<List<SoilMoistureReading>> GetHistoryAsync();
-    
-    Task GemMålingAsync();
+    Task SaveReadingAsync();
     Task<SoilMoistureReading?> GetLatestByDepthAsync(double depth);
-    
 }
