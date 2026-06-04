@@ -49,26 +49,25 @@ button:hover {
     background-color: #c0392b;
 }
 
-/* Box-tl */
 .Box-tl {
     text-align: left;
 }
 
-.maaling-grid {
+.reading-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 10px;
     margin-top: 10px;
 }
 
-.maalingIndhold {
+.readingContent {
     border: 1px solid #1e3a5f;
     border-radius: 8px;
     padding: 12px;
     background-color: #0d2137;
 }
 
-.fugtighedTal {
+.moistureValue {
     font-size: 1.1rem;
     font-weight: 600;
     display: block;
@@ -76,18 +75,18 @@ button:hover {
     color: #4fc3f7;
 }
 
-.fugtighed-tal {
+.moisture-text {
     font-size: 0.95rem;
     color: #a0b4c8;
 }
 
-.tid-tekst {
+.time-text {
     font-size: 0.9rem;
     color: #5a7a94;
     font-style: italic;
 }
 
-/* Box-tr */
+
 .Box-tr {
     overflow-y: auto;
     max-height: 300px;
@@ -115,7 +114,7 @@ button:hover {
     color: #c8d8e8;
 }
 
-/* Box-bl */
+
 .Box-bl {
     min-height: 350px;
 }
@@ -125,8 +124,8 @@ button:hover {
     width: 100% !important;
 }
 
-/* Box-br */
-.alarm-boks {
+
+.alarm-box {
     background-color: #2d1515;
     border: 2px solid #e74c3c;
     border-radius: 8px;
@@ -136,7 +135,7 @@ button:hover {
     margin: 10px 0;
 }
 
-.alarm-boks p {
+.alarm-box p {
     color: #e74c3c;
     font-weight: bold;
     font-size: 1.1rem;
